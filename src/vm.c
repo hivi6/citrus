@@ -11,6 +11,8 @@
 void register_set(vm_t *vm, uint64_t reg, uint64_t value);
 uint64_t register_get(vm_t *vm, uint64_t reg);
 uint64_t mask(uint64_t value, uint64_t mask_value);
+uint64_t addr_get(uint64_t addr, uint64_t size);
+void addr_set(uint64_t addr, uint64_t value, uint64_t size);
 
 // ========================================
 // vm.h - definition
@@ -20,13 +22,13 @@ void vm_init(vm_t *vm, uint64_t stack_size) {
 	vm->inst = NULL;
 	vm->inst_size = 0;
 
-	vm->r_size = 8;
+	vm->r_size = 16;
 	vm->r = malloc(sizeof(uint64_t) * vm->r_size);
 
 	vm->stack_size = stack_size;
 	vm->stack = malloc(sizeof(uint8_t) * stack_size);
 
-	uint8_t *sp = vm->stack_size - 1 + vm->stack;
+	uint8_t *sp = vm->stack_size + vm->stack;
 	vm->r[1] = (uint64_t) sp;
 }
 
@@ -61,6 +63,61 @@ int vm_next(vm_t *vm) {
 		register_set(vm, arg1, mask(register_get(vm, arg2), arg3));
 		ip++;
 		break;
+	case INST_LOAD_INDIRECT: {
+		uint64_t addr = register_get(vm, arg2);
+		uint64_t size = arg3;
+		register_set(vm, arg1, addr_get(addr, size));
+		ip++;
+		break;
+	}
+	case INST_PUSH: {
+		uint64_t value = register_get(vm, arg1);
+		sp -= 8;
+		addr_set((uint64_t) sp, value, 8);
+		ip++;
+		break;
+	}
+	case INST_POP: {
+		uint64_t value = addr_get((uint64_t) sp, 8);
+		sp += 8;
+		register_set(vm, arg1, value);
+		ip++;
+		break;
+	}
+	case INST_STORE_INDIRECT: {
+		uint64_t addr = register_get(vm, arg1);
+		uint64_t value = register_get(vm, arg2);
+		uint64_t size = arg3;
+		addr_set(addr, value, size);
+		ip++;
+		break;
+	}
+	case INST_JMP: {
+		uint64_t offset = arg1;
+		ip = vm->inst + offset;
+		break;
+	}
+	case INST_JMP_FALSE: {
+		uint64_t value = register_get(vm, arg1);
+		uint64_t offset = arg2;
+		if (!value) ip = &vm->inst[offset];
+		else ip++;
+		break;
+	}
+	case INST_ADD: {
+		uint64_t left = register_get(vm, arg2);
+		uint64_t right = register_get(vm, arg3);
+		register_set(vm, arg1, left + right);
+		ip++;
+		break;
+	}
+	case INST_SUB: {
+		uint64_t left = register_get(vm, arg2);
+		uint64_t right = register_get(vm, arg3);
+		register_set(vm, arg1, left - right);
+		ip++;
+		break;
+	}
 	default:
 		fprintf(stderr, "What is this instruction?\n");
 		return VM_HALT;
@@ -101,5 +158,25 @@ uint64_t mask(uint64_t value, uint64_t bytes) {
 		masker |= 0xff;
 	}
 	return value & masker;
+}
+
+uint64_t addr_get(uint64_t addr, uint64_t size) {
+	assert(0 <= size && size <= 8);
+	uint64_t res = 0;
+	uint8_t *res_ptr = (uint8_t *) &res;
+	uint8_t *addr_ptr = (uint8_t *) addr;
+	for (uint64_t i = 0; i < size; i++) {
+		res_ptr[i] = addr_ptr[i];
+	}
+	return res;
+}
+
+void addr_set(uint64_t addr, uint64_t value, uint64_t size) {
+	assert(0 <= size && size <= 8);
+	uint8_t *addr_ptr = (uint8_t *) addr;
+	uint8_t *value_ptr = (uint8_t *) &value;
+	for (uint64_t i = 0; i < size; i++) {
+		addr_ptr[i] = value_ptr[i];
+	}
 }
 
