@@ -10,6 +10,7 @@
 void inst_print(inst_t *inst, uint64_t inst_size) {
 	for (uint64_t i = 0; i < inst_size; i++) {
 		if (inst[i].label) {
+			printf("%p - %3llu | ", &inst[i], i);
 			printf("%s:\n", inst[i].label);
 		}
 
@@ -65,7 +66,7 @@ void inst_print(inst_t *inst, uint64_t inst_size) {
 			break;
 		}
 
-		printf("    %-20s ", inst_str);
+		printf("%p - %3llu |     %-20s ", &inst[i], i, inst_str);
 		if (arg >= 1) printf("%20llu ", inst[i].arg1);
 		if (arg >= 2) printf("%20llu ", inst[i].arg2);
 		if (arg >= 3) printf("%20llu ", inst[i].arg3);
