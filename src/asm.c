@@ -406,6 +406,7 @@ uint64_t get_register(token_t *token) {
 		}
 		reg = reg * 10 + (lexical[i] - '0');
 	}
+	free(lexical);
 	return reg;
 }
 
@@ -451,7 +452,10 @@ uint64_t get_int_literal(token_t *token) {
 char *get_label() {
 	for (int i = 0; i < g_labels_size; i++) {
 		if (g_labels_pos[i] == g_inst_size) {
-			return g_labels[i];
+			int size = strlen(g_labels[i]) + 5;
+			char *str = malloc(size * sizeof(char));
+			sprintf(str, "%s", g_labels[i]);
+			return str;
 		}
 	}
 	return NULL;
