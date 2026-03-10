@@ -1,27 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "inst.h"
 #include "vm.h"
+#include "asm.h"
 
-int main() {
-	inst_t inst[] = {
-		{"main", INST_NOP},
-		{NULL, INST_LOAD_CONST, 2, 8},
-		{NULL, INST_SUB, 2, 1, 2},
-		{NULL, INST_LOAD_CONST, 3, (1 << 3) - 1},
-		{NULL, INST_LOAD_CONST, 4, 8},
-		{NULL, INST_SUB, 4, 1, 4},
-		{NULL, INST_LOAD_INDIRECT, 4, 4, 8},
-		{NULL, INST_PUSH, 3},
-		{NULL, INST_LOAD_CONST, 5, 0xf12345},
-		{NULL, INST_PUSH, 5},
-		{NULL, INST_POP, 6},
-		{NULL, INST_POP, 7},
-		{NULL, INST_STORE_INDIRECT, 2, 5, 1},
-		{NULL, INST_JMP_FALSE, 10, 0},
-		{NULL, INST_HLT},
-	};
-	uint64_t inst_size = 15;
+int main(int argc, char **argv) {
+	inst_t *inst;
+	uint64_t inst_size;
+
+	if (argc != 2) {
+		fprintf(stderr, "No file provided\n");
+		exit(1);
+	}
+
+	load_assembly(argv[1], &inst, &inst_size);
 
 	printf("========================================\n");
 	printf("INSTRUCTIONS\n");
@@ -37,9 +30,6 @@ int main() {
 	vm_t vm;
 	vm_init(&vm, 1024 * 1024);
 	vm_load(&vm, inst, inst_size);
-
-	vm.stack[vm.stack_size-1] = 12;
-	vm.stack[vm.stack_size-2] = 13;
 
 	while (!vm_next(&vm));
 

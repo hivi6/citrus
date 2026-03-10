@@ -1,0 +1,18 @@
+main:
+	INST_NOP
+	INST_LOAD_CONST     r2 8
+	INST_SUB            r2 r1 r2
+	INST_LOAD_CONST     r3 1023
+	INST_LOAD_CONST     r4 8
+	INST_SUB            r4 r1 r4
+	INST_LOAD_INDIRECT  r4 r4 8
+	INST_PUSH           r3
+	INST_LOAD_CONST     r5 15803205
+	INST_PUSH           r5
+	INST_POP            r6
+	INST_POP            r7
+	# Hello; this is a comment
+hola:
+	INST_STORE_INDIRECT r2 r5 1
+	INST_HLT
+
