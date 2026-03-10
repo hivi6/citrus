@@ -1,0 +1,4 @@
+main:
+	INST_LOAD_CONST  r4 69
+	INST_SYSCALL     60
+

@@ -254,3 +254,10 @@ arg1: char *buf
 arg2: size_t count
 ```
 
+#### Exit syscall
+
+```
+SYSCALL_NUMBER: 60
+arg0: int error_code
+```
+

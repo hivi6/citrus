@@ -203,6 +203,9 @@ void vm_syscall(vm_t *vm, uint64_t number) {
 	case 1: // WRITE
 		returnValue = write(arg0, (void *) arg1, arg2);
 		break;
+	case 60: // EXIT
+		exit(arg0);
+		break;
 	default:
 		fprintf(stderr, "No such syscall number: %llu", number);
 		exit(1);
