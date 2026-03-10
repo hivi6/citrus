@@ -63,6 +63,10 @@ void inst_print(inst_t *inst, uint64_t i) {
 		inst_str = "INST_SUB";
 		arg = 3;
 		break;
+	case INST_SYSCALL:
+		inst_str = "INST_SYSCALL";
+		arg = 1;
+		break;
 	}
 
 	printf("%p - %3llu |     %-20s ", &inst[i], i, inst_str);

@@ -66,6 +66,10 @@ enum {
 	// arg2 = left operand;
 	// arg3 = right operand;
 	INST_SUB,
+
+	// Make a syscall
+	// arg1 = syscall number;
+	INST_SYSCALL,
 };
 
 struct inst_t {

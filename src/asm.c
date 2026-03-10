@@ -201,6 +201,8 @@ void parse_line() {
 		check(INST_ADD, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
 	else if (token_cmp(identifier, "INST_SUB"))
 		check(INST_SUB, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
+	else if (token_cmp(identifier, "INST_SYSCALL"))
+		check(INST_SYSCALL, 1, TT_INT_LITERAL);
 	else {
 		errormsg(identifier->start, identifier->end, "What is this opcode?");
 		exit(1);

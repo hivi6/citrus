@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 // ========================================
 // helper declaration
@@ -13,6 +14,7 @@ uint64_t register_get(vm_t *vm, uint64_t reg);
 uint64_t mask(uint64_t value, uint64_t mask_value);
 uint64_t addr_get(uint64_t addr, uint64_t size);
 void addr_set(uint64_t addr, uint64_t value, uint64_t size);
+void vm_syscall(vm_t *vm, uint64_t number);
 
 // ========================================
 // vm.h - definition
@@ -118,6 +120,11 @@ int vm_next(vm_t *vm) {
 		ip++;
 		break;
 	}
+	case INST_SYSCALL: {
+		vm_syscall(vm, arg1);
+		ip++;
+		break;
+	}
 	default:
 		fprintf(stderr, "What is this instruction?\n");
 		return VM_HALT;
@@ -178,5 +185,29 @@ void addr_set(uint64_t addr, uint64_t value, uint64_t size) {
 	for (uint64_t i = 0; i < size; i++) {
 		addr_ptr[i] = value_ptr[i];
 	}
+}
+
+void vm_syscall(vm_t *vm, uint64_t number) {
+	uint64_t returnValue = 0;
+	uint64_t arg0 = vm->r[4];
+	uint64_t arg1 = vm->r[5];
+	uint64_t arg2 = vm->r[6];
+	uint64_t arg3 = vm->r[7];
+	uint64_t arg4 = vm->r[8];
+	uint64_t arg5 = vm->r[9];
+
+	switch (number) {
+	case 0: // READ
+		returnValue = read(arg0, (void *) arg1, arg2);
+		break;
+	case 1: // WRITE
+		returnValue = write(arg0, (void *) arg1, arg2);
+		break;
+	default:
+		fprintf(stderr, "No such syscall number: %llu", number);
+		exit(1);
+	}
+
+	vm->r[3] = returnValue;
 }
 

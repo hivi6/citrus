@@ -2,6 +2,19 @@
 
 A (infinite) register based VM.
 
+## Registers
+
+The VM has infinitly many registers, but by default there are 16 registers.
+
+These 2 register are special registers.
+
+```
+r0 <- Instruction Pointer
+r1 <- Stack Pointer
+```
+
+Rest of the registers are general purpose register.
+
 ## Instructions
 
 ### No operation instruction
@@ -199,4 +212,45 @@ INST_SUB r4 r2 r3
 ```
 
 Here r4 = r2 - r3
+
+### Syscall instruction
+
+By default, the following way is to make a syscall. Most of the syscall is based
+on linux's syscall calling convention.
+
+```
+SYSCALL <SYSCALL_NUMBER>
+```
+
+Registers used for arguments and return value for the syscall
+
+```
+r3 <- Return value if any for the syscall
+r4 <- arg0
+r5 <- arg1
+r6 <- arg2
+r7 <- arg3
+r8 <- arg4
+r9 <- arg5
+```
+
+Most of the calling convention are based on this [table](https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/#x86_64-64-bit)
+
+#### Read syscall
+
+```
+SYSCALL_NUMBER: 0
+arg0: unsigned int fd
+arg1: char *buf
+arg2: size_t count
+```
+
+#### Write syscall
+
+```
+SYSCALL_NUMBER: 1
+arg0: unsigned int fd
+arg1: char *buf
+arg2: size_t count
+```
 
