@@ -1,0 +1,53 @@
+main:
+	INST_LOAD_CONST r10 10
+	INST_LOAD_CONST r11 1
+
+LOOP_START:
+	INST_JMP_FALSE  r10 LOOP_END
+	INST_CALL 	printHello
+	INST_SUB        r10 r10 r11
+	INST_JMP        LOOP_START
+LOOP_END:
+
+	INST_HLT
+
+printHello:
+	INST_LOAD            r2 r1 8
+	INST_LOAD_CONST      r3 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 0
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 10
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 111
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 108
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 108
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 101
+	INST_STORE_INDIRECT  r2 r4 1
+	INST_SUB             r2 r2 r3
+
+	INST_LOAD_CONST      r4 104
+	INST_STORE_INDIRECT  r2 r4 1
+
+	INST_LOAD_CONST      r3 0
+	INST_LOAD_CONST      r4 0
+	INST_LOAD            r5 r2 8
+	INST_LOAD_CONST      r6 6
+	INST_SYSCALL         1
+
+	INST_RET
+

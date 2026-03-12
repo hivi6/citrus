@@ -13,7 +13,7 @@
 // ========================================
 
 enum {
-	TT_COLON,
+	TT_COLON=0,
 
 	TT_IDENTIFIER,
 	TT_INT_LITERAL,
@@ -115,34 +115,17 @@ void load_file() {
 		exit(1);
 	}
 
-	int cap = 1024, len = 0;
-	char *buffer = (char *) malloc(cap * sizeof(char));
+	fseek(fd, 0, SEEK_END);
+	int len = ftell(fd);
+	fseek(fd, 0, SEEK_SET);
+
+	char *buffer = (char *) malloc((len+1) * sizeof(char));
 	if (buffer == NULL) {
 		perror("Error in load_file while malloc");
 		exit(1);
 	}
-
-	while (1) {
-		int size = fread(buffer, 1, cap - len, fd);
-		if (size == 0) break;
-
-		len += size;
-		if (len == cap) {
-			cap *= 2;
-			buffer = realloc(buffer, cap * sizeof(char));
-			if (buffer == NULL) {
-				perror("Error in load_file while malloc");
-				exit(1);
-			}
-		}
-	}
-
-	buffer = realloc(buffer, len + 1);
-	if (buffer == NULL) {
-		perror("Error in read_file with realloc - 2");
-		exit(1);
-	}
-	buffer[len] = '\0';
+	fread(buffer, 1, len, fd);
+	buffer[len] = 0;
 
 	if (isFile) fclose(fd);
 
@@ -240,7 +223,6 @@ void tokenize() {
 		else if (ch == '#') { // comments
 			while (!eof() && current_char() != '\n') {
 				next_char();
-				ignore_whitespace();
 			}
 			break;
 		}
