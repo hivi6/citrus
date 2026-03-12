@@ -137,6 +137,9 @@ void debugger(vm_t *vm) {
 		else if (strcmp(cmd, "help") == 0) {
 			debugger_usage();
 		}
+		else if (strcmp(cmd, "run") == 0) {
+			while (!vm_next(vm));
+		}
 		else {
 			printf("Unknown command\n");
 			continue;
@@ -154,6 +157,7 @@ void debugger_usage() {
 	printf("    showall Show all instructions\n");
 	printf("    exit    Exist debugger mode\n");
 	printf("    help    This screen\n");
+	printf("    run     Complete run the vm until halt instruction\n");
 	printf("\n");
 
 }
