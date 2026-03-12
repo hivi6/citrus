@@ -1,0 +1,19 @@
+	INST_JMP main
+
+# This is a function
+# Loads value into r10 register
+# arguments: r3
+function:
+	INST_LOAD r10 r3 8
+	INST_RET
+
+main:
+	INST_LOAD_CONST r3 1024
+	INST_CALL       function
+
+	INST_LOAD_CONST r3 1025
+	INST_CALL       function
+
+	INST_HLT
+	
+	

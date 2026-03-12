@@ -63,6 +63,14 @@ void inst_print(inst_t *inst, uint64_t i) {
 		inst_str = "INST_SUB";
 		arg = 3;
 		break;
+	case INST_CALL:
+		inst_str = "INST_CALL";
+		arg = 1;
+		break;
+	case INST_RET:
+		inst_str = "INST_RET";
+		arg = 0;
+		break;
 	case INST_SYSCALL:
 		inst_str = "INST_SYSCALL";
 		arg = 1;

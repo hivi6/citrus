@@ -120,6 +120,21 @@ int vm_next(vm_t *vm) {
 		ip++;
 		break;
 	}
+	case INST_CALL: {
+		inst_t *new_ip = vm->inst + arg1;
+		// store the instruction next to call
+		uint64_t value = (uint64_t) (ip + 1); 
+		sp -= 8;
+		addr_set((uint64_t) sp, value, 8);
+		ip = new_ip;
+		break;
+	}
+	case INST_RET: {
+		uint64_t ret_ip = addr_get((uint64_t) sp, 8);
+		sp += 8;
+		ip = (inst_t *) ret_ip;
+		break;
+	}
 	case INST_SYSCALL: {
 		vm_syscall(vm, arg1);
 		ip++;

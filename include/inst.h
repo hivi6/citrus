@@ -67,6 +67,14 @@ enum {
 	// arg3 = right operand;
 	INST_SUB,
 
+	// Function call to a given label
+	// arg1 = offset
+	INST_CALL,
+
+	// Function return
+	// No arguments
+	INST_RET,
+
 	// Make a syscall
 	// arg1 = syscall number;
 	INST_SYSCALL,

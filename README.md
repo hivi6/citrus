@@ -213,6 +213,35 @@ INST_SUB r4 r2 r3
 
 Here r4 = r2 - r3
 
+### Function Call instruction
+
+Arguments:
+- 1st argument: Jump to the given offset or label
+
+Call a function
+
+Snippet:
+
+```
+main:
+    INST_CALL 0
+```
+
+### Function Return instruction
+
+Arguments:
+- No arguments
+
+Return from the function
+
+Snippet:
+
+```
+main:
+    INST_RET
+```
+
+
 ### Syscall instruction
 
 By default, the following way is to make a syscall. Most of the syscall is based

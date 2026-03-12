@@ -210,6 +210,10 @@ void parse_line() {
 		check(INST_ADD, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
 	else if (token_cmp(identifier, "INST_SUB"))
 		check(INST_SUB, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
+	else if (token_cmp(identifier, "INST_CALL"))
+		check(INST_CALL, 1, TT_LABEL);
+	else if (token_cmp(identifier, "INST_RET"))
+		check(INST_RET, 0);
 	else if (token_cmp(identifier, "INST_SYSCALL"))
 		check(INST_SYSCALL, 1, TT_INT_LITERAL);
 	else {
@@ -496,6 +500,9 @@ void apply_labels() {
 		}
 		else if (g_inst[index].type == INST_JMP_FALSE) {
 			g_inst[index].arg2 = jmp_pointer;
+		}
+		else if (g_inst[index].type == INST_CALL) {
+			g_inst[index].arg1 = jmp_pointer;
 		}
 		else {
 			fprintf(stderr, "What is this instruction???\n");
