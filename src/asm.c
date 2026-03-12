@@ -41,6 +41,9 @@ static uint64_t *g_labels_pos;
 static int g_labels_size;
 static inst_t *g_inst;
 static int g_inst_size;
+static int *g_jmp_labels_index;
+static const char **g_jmp_labels_name;
+static int g_jmp_labels_size;
 
 void init(const char *filepath);
 void load_file();
@@ -62,10 +65,11 @@ char token_cmp(token_t *token, const char *name);
 void store_label(token_t *token);
 void inst_append(const char *label, uint64_t type, uint64_t arg1, uint64_t arg2, uint64_t arg3);
 uint64_t get_register(token_t *token);
-uint64_t get_label_pointer(token_t *token);
+uint64_t get_label_pointer(const char *token);
 uint64_t get_int_literal(token_t *token);
 char *get_label();
 char *token_lexical(token_t *token);
+void apply_labels();
 
 
 // ========================================
@@ -76,6 +80,8 @@ void load_assembly(const char *filepath, inst_t **inst, uint64_t *inst_size) {
 	init(filepath);
 	load_file();
 	parse();
+	apply_labels();
+
 	*inst = g_inst;
 	*inst_size = g_inst_size;
 }
@@ -93,6 +99,9 @@ void init(const char *filepath) {
 	g_labels_size = 0;
 	g_inst = NULL;
 	g_inst_size = 0;
+	g_jmp_labels_index = NULL;
+	g_jmp_labels_name = NULL;
+	g_jmp_labels_size = 0;
 }
 
 void load_file() {
@@ -322,7 +331,15 @@ void check(int inst, int size, ...) {
 			value = get_register(peek());
 		}
 		else if (type == TT_LABEL) {
-			value = get_label_pointer(peek());
+			int index = g_jmp_labels_size;
+			g_jmp_labels_size++;
+			g_jmp_labels_index = realloc(g_jmp_labels_index, 
+				sizeof(int) * g_jmp_labels_size);
+			g_jmp_labels_name = realloc(g_jmp_labels_name, 
+				sizeof(char *) * g_jmp_labels_size);
+			g_jmp_labels_index[index] = g_inst_size;
+			g_jmp_labels_name[index] = token_lexical(peek());
+			value = -1; // For now just a placeholder
 		}
 		else if (type == TT_INT_LITERAL) {
 			value = get_int_literal(peek());
@@ -410,8 +427,7 @@ uint64_t get_register(token_t *token) {
 	return reg;
 }
 
-uint64_t get_label_pointer(token_t *token) {
-	char *token_str = token_lexical(token);
+uint64_t get_label_pointer(const char *token_str) {
 	int i = 0;
 	int res = -1;
 	while (i < g_labels_size) {
@@ -422,10 +438,9 @@ uint64_t get_label_pointer(token_t *token) {
 		}
 		i++;
 	}
-	free(token_str);
 
 	if (res == -1) {
-		errormsg(token->start, token->end, "No label exists");
+		fprintf(stderr, "No label exists");
 		exit(1);
 	}
 
@@ -468,5 +483,24 @@ char *token_lexical(token_t *token) {
 		str[i-token->start] = g_source[i];
 	}
 	return str;
+}
+
+void apply_labels() {
+	for (int i = 0; i < g_jmp_labels_size; i++) {
+		int index = g_jmp_labels_index[i];
+		const char *name = g_jmp_labels_name[i];
+		int jmp_pointer = get_label_pointer(name);
+
+		if (g_inst[index].type == INST_JMP) {
+			g_inst[index].arg1 = jmp_pointer;
+		}
+		else if (g_inst[index].type == INST_JMP_FALSE) {
+			g_inst[index].arg2 = jmp_pointer;
+		}
+		else {
+			fprintf(stderr, "What is this instruction???\n");
+			exit(1);
+		}
+	}
 }
 

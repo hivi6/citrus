@@ -1,0 +1,7 @@
+	INST_JMP main
+	INST_HLT
+main:
+
+	INST_LOAD_CONST  r10  1024
+	INST_HLT
+
