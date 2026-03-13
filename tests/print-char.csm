@@ -1,0 +1,11 @@
+# This is a program that prints a character but instead of taking the argument
+# in register, it takes from the stack
+
+main:
+	# Allocate space for the argument
+	INST_LOAD_CONST r10 1
+	INST_LOAD       r2  r1 8
+	INST_SUB        r1  r1 r10
+
+	INST_HLT
+

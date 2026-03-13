@@ -44,6 +44,7 @@ void vm_load(vm_t *vm, inst_t *inst, uint64_t inst_size) {
 int vm_next(vm_t *vm) {
 	inst_t *ip = (inst_t *) vm->r[0];
 	uint8_t *sp = (uint8_t *) vm->r[1];
+	uint8_t *prev_sp = sp;
 
 	assert(vm->inst <= ip && ip < (vm->inst + vm->inst_size));
 
@@ -173,7 +174,7 @@ int vm_next(vm_t *vm) {
 		return VM_HALT;
 	}
 	vm->r[0] = (uint64_t) ip;
-	vm->r[1] = (uint64_t) sp;
+	if (prev_sp != sp) vm->r[1] = (uint64_t) sp;
 
 	return VM_CONTINUE;
 }
