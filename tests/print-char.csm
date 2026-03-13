@@ -7,5 +7,47 @@ main:
 	INST_LOAD       r2  r1 8
 	INST_SUB        r1  r1 r10
 
+	# Assign the character that needs to be printed in the stack area
+	INST_LOAD_CONST      r10 65 # Print the 'A' character
+	INST_STORE_INDIRECT  r1 r10 8
+
+	# Making function call
+	INST_CALL printChar
+
+	# Print 'B'
+	INST_LOAD_CONST      r10 66
+	INST_STORE_INDIRECT  r1 r10 8
+	INST_CALL            printChar
+
+	# Print 'C'
+	INST_LOAD_CONST      r10 67
+	INST_STORE_INDIRECT  r1 r10 8
+	INST_CALL            printChar
+
+	# Print newline
+	INST_LOAD_CONST      r10 10
+	INST_STORE_INDIRECT  r1 r10 8
+	INST_CALL            printChar
+
 	INST_HLT
+
+printChar:
+	# First store the rbp(r2) pointer 
+	INST_PUSH r2
+	INST_LOAD r2 r1 8
+
+	# Get the content of stack (pointer)
+	INST_LOAD_CONST    r10 16
+	INST_ADD           r10 r2 r10
+
+	# Make syscall to write
+	INST_LOAD_CONST      r4 0
+	INST_LOAD            r5 r10 8
+	INST_LOAD_CONST      r6 1
+	INST_SYSCALL         1
+
+	# Get the rbp before return
+	INST_POP  r2
+
+	INST_RET
 
