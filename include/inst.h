@@ -55,6 +55,11 @@ enum {
 	// arg2 = offset in the instruction;
 	INST_JMP_FALSE,
 
+	// Jump to the given offset in the instruction if register is non zero
+	// arg1 = register index;
+	// arg2 = offset in the instruction;
+	INST_JMP_TRUE,
+
 	// Add content of 2 register and store it to a destination resgier
 	// arg1 = destination register index;
 	// arg2 = left operand;
@@ -66,6 +71,24 @@ enum {
 	// arg2 = left operand;
 	// arg3 = right operand;
 	INST_SUB,
+	
+	// Multiply content of 2 register and store it to a destination resgier
+	// arg1 = destination register index;
+	// arg2 = left operand;
+	// arg3 = right operand;
+	INST_MUL,
+	
+	// Divide content of 2 register and store it to a destination resgier
+	// arg1 = destination register index;
+	// arg2 = left operand;
+	// arg3 = right operand;
+	INST_DIV,
+	
+	// Modulus content of 2 register and store it to a destination resgier
+	// arg1 = destination register index;
+	// arg2 = left operand;
+	// arg3 = right operand;
+	INST_MOD,
 
 	// Function call to a given label
 	// arg1 = offset

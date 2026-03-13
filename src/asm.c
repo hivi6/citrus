@@ -189,10 +189,18 @@ void parse_line() {
 		check(INST_JMP, 1, TT_LABEL);
 	else if (token_cmp(identifier, "INST_JMP_FALSE"))
 		check(INST_JMP_FALSE, 2, TT_REGISTER, TT_LABEL);
+	else if (token_cmp(identifier, "INST_JMP_TRUE"))
+		check(INST_JMP_TRUE, 2, TT_REGISTER, TT_LABEL);
 	else if (token_cmp(identifier, "INST_ADD"))
 		check(INST_ADD, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
 	else if (token_cmp(identifier, "INST_SUB"))
 		check(INST_SUB, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
+	else if (token_cmp(identifier, "INST_MUL"))
+		check(INST_MUL, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
+	else if (token_cmp(identifier, "INST_DIV"))
+		check(INST_DIV, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
+	else if (token_cmp(identifier, "INST_MOD"))
+		check(INST_MOD, 3, TT_REGISTER, TT_REGISTER, TT_REGISTER);
 	else if (token_cmp(identifier, "INST_CALL"))
 		check(INST_CALL, 1, TT_LABEL);
 	else if (token_cmp(identifier, "INST_RET"))
@@ -481,6 +489,9 @@ void apply_labels() {
 			g_inst[index].arg1 = jmp_pointer;
 		}
 		else if (g_inst[index].type == INST_JMP_FALSE) {
+			g_inst[index].arg2 = jmp_pointer;
+		}
+		else if (g_inst[index].type == INST_JMP_TRUE) {
 			g_inst[index].arg2 = jmp_pointer;
 		}
 		else if (g_inst[index].type == INST_CALL) {

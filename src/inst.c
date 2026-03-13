@@ -55,12 +55,28 @@ void inst_print(inst_t *inst, uint64_t i) {
 		inst_str = "INST_JMP_FALSE";
 		arg = 2;
 		break;
+	case INST_JMP_TRUE:
+		inst_str = "INST_JMP_TRUE";
+		arg = 2;
+		break;
 	case INST_ADD:
 		inst_str = "INST_ADD";
 		arg = 3;
 		break;
 	case INST_SUB:
 		inst_str = "INST_SUB";
+		arg = 3;
+		break;
+	case INST_MOD:
+		inst_str = "INST_MOD";
+		arg = 3;
+		break;
+	case INST_MUL:
+		inst_str = "INST_MUL";
+		arg = 3;
+		break;
+	case INST_DIV:
+		inst_str = "INST_DIV";
 		arg = 3;
 		break;
 	case INST_CALL:

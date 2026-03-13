@@ -106,6 +106,13 @@ int vm_next(vm_t *vm) {
 		else ip++;
 		break;
 	}
+	case INST_JMP_TRUE: {
+		uint64_t value = register_get(vm, arg1);
+		uint64_t offset = arg2;
+		if (value) ip = &vm->inst[offset];
+		else ip++;
+		break;
+	}
 	case INST_ADD: {
 		uint64_t left = register_get(vm, arg2);
 		uint64_t right = register_get(vm, arg3);
@@ -117,6 +124,27 @@ int vm_next(vm_t *vm) {
 		uint64_t left = register_get(vm, arg2);
 		uint64_t right = register_get(vm, arg3);
 		register_set(vm, arg1, left - right);
+		ip++;
+		break;
+	}
+	case INST_MUL: {
+		uint64_t left = register_get(vm, arg2);
+		uint64_t right = register_get(vm, arg3);
+		register_set(vm, arg1, left * right);
+		ip++;
+		break;
+	}
+	case INST_DIV: {
+		uint64_t left = register_get(vm, arg2);
+		uint64_t right = register_get(vm, arg3);
+		register_set(vm, arg1, left / right);
+		ip++;
+		break;
+	}
+	case INST_MOD: {
+		uint64_t left = register_get(vm, arg2);
+		uint64_t right = register_get(vm, arg3);
+		register_set(vm, arg1, left % right);
 		ip++;
 		break;
 	}

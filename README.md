@@ -179,6 +179,22 @@ INST_JMP_FALSE r3 start
 
 Jump to start label if r3 is zero.
 
+### Jump If True Instruction
+
+Arguments:
+- 1st argument: Source Register identifier
+- 2nd argument: Offset or label
+
+Jump to a given label or offset if the source register value is non zero
+
+Snippet:
+
+```
+INST_JMP_TRUE r3 start
+```
+
+Jump to start label if r3 is non zero.
+
 ### Add instruction
 
 Arguments:
@@ -212,6 +228,57 @@ INST_SUB r4 r2 r3
 ```
 
 Here r4 = r2 - r3
+
+### Multiply instruction
+
+Arguments:
+- 1st argument: Destination Register identifier
+- 2nd argument: Left Register identifier
+- 3rd argument: Right Register identifier
+
+multiply content of 2 register and store it in a destination register
+
+Snippet:
+
+```
+INST_MUL r4 r2 r3
+```
+
+Here r4 = r2 * r3
+
+### Divide instruction
+
+Arguments:
+- 1st argument: Destination Register identifier
+- 2nd argument: Left Register identifier
+- 3rd argument: Right Register identifier
+
+divide content of 2 register and store it in a destination register
+
+Snippet:
+
+```
+INST_DIV r4 r2 r3
+```
+
+Here r4 = r2 / r3
+
+### Divide instruction
+
+Arguments:
+- 1st argument: Destination Register identifier
+- 2nd argument: Left Register identifier
+- 3rd argument: Right Register identifier
+
+modulus content of 2 register and store it in a destination register
+
+Snippet:
+
+```
+INST_MOD r4 r2 r3
+```
+
+Here r4 = r2 % r3
 
 ### Function Call instruction
 
