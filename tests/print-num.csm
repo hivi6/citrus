@@ -45,6 +45,9 @@ printNumLoopStart:
 
 	INST_JMP_TRUE   r4 printNumLoopStart
 
+	INST_LOAD_CONST r3 10
+	INST_CALL       printChar
+
 	INST_RET
 
 # Get the length of the number
