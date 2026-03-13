@@ -357,3 +357,11 @@ SYSCALL_NUMBER: 60
 arg0: int error_code
 ```
 
+### Clock GetTime syscall
+
+```
+SYSCALL_NUMBER: 263
+arg0: clockid_t which_clock
+arg1: struct __kernel_timespec *tp
+```
+

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <unistd.h>
 
 // ========================================
@@ -249,6 +250,9 @@ void vm_syscall(vm_t *vm, uint64_t number) {
 		break;
 	case 60: // EXIT
 		exit(arg0);
+		break;
+	case 263: // clock_gettime
+		returnValue = clock_gettime(arg0, (void *) arg1);
 		break;
 	default:
 		fprintf(stderr, "No such syscall number: %llu", number);
