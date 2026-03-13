@@ -332,36 +332,3 @@ r9 <- arg5
 
 Most of the calling convention are based on this [table](https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/#x86_64-64-bit)
 
-#### Read syscall
-
-```
-SYSCALL_NUMBER: 0
-arg0: unsigned int fd
-arg1: char *buf
-arg2: size_t count
-```
-
-#### Write syscall
-
-```
-SYSCALL_NUMBER: 1
-arg0: unsigned int fd
-arg1: char *buf
-arg2: size_t count
-```
-
-#### Exit syscall
-
-```
-SYSCALL_NUMBER: 60
-arg0: int error_code
-```
-
-### Clock GetTime syscall
-
-```
-SYSCALL_NUMBER: 263
-arg0: clockid_t which_clock
-arg1: struct __kernel_timespec *tp
-```
-

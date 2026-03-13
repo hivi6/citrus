@@ -1,8 +1,12 @@
 #include "vm.h"
 
 #include <assert.h>
+#include <fcntl.h>
+#include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -242,13 +246,41 @@ void vm_syscall(vm_t *vm, uint64_t number) {
 	uint64_t arg5 = vm->r[9];
 
 	switch (number) {
-	case 0: // READ
+	case 0: // read
 		returnValue = read(arg0, (void *) arg1, arg2);
 		break;
-	case 1: // WRITE
+	case 1: // write
 		returnValue = write(arg0, (void *) arg1, arg2);
 		break;
-	case 60: // EXIT
+	case 2: // open
+		returnValue = open((void *) arg0, arg1, arg2);
+		break;
+	case 3: // close
+		returnValue = close(arg0);
+		break;
+	case 4: // stat
+		returnValue = stat((void *) arg0, (void *) arg1);
+		break;
+	case 5: // fstat
+		returnValue = fstat(arg0, (void *) arg1);
+		break;
+	case 6: // lstat
+		returnValue = lstat((void *) arg0, (void *) arg1);
+		break;
+	case 7: // poll
+		returnValue = poll((void *) arg0, arg1, arg2);
+		break;
+	case 8: // lseek
+		returnValue = lseek(arg0, arg1, arg2);
+		break;
+	case 9: // mmap
+		returnValue = (uint64_t) mmap((void *) arg0, arg1, arg2, arg3, 
+			arg4, arg5);
+		break;
+	case 10: // mprotect
+		returnValue = mprotect((void *) arg0, arg1, arg2);
+		break;
+	case 60: // exit
 		exit(arg0);
 		break;
 	case 263: // clock_gettime
