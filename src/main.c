@@ -14,6 +14,7 @@ void show_inst(inst_t *inst, uint64_t inst_size);
 void show_vm_state(vm_t vm);
 void debugger(vm_t *vm);
 void debugger_usage();
+void usage();
 
 // ========================================
 // main definition
@@ -22,17 +23,28 @@ void debugger_usage();
 int main(int argc, char **argv) {
 	int arg_cur = 1;
 	int debugger_flag = 0;
+	int usage_flag = 0;
 	while (arg_cur < argc) {
 		if (strcmp("--debugger", argv[arg_cur]) == 0) {
 			debugger_flag = 1;
 			arg_cur++;
 		}
+		else if (strcmp("--help", argv[arg_cur]) == 0) {
+			usage_flag = 1;
+			arg_cur++;
+		}
 		else break;
+	}
+
+	if (usage_flag) {
+		usage();
+		return 0;
 	}
 
 	if (argc <= arg_cur) {
 		fprintf(stderr, "No file provided\n");
-		exit(1);
+		usage();
+		return 1;
 	}
 
 	inst_t *inst;
@@ -168,5 +180,14 @@ void debugger_usage() {
 	printf("    reset   Reset the vm and load the instruction again\n");
 	printf("\n");
 
+}
+
+void usage() {
+	printf("Usage: citrus [OPTIONS] <filepath>\n");
+	printf("\n");
+	printf("OPTIONS:\n");
+	printf("    --debugger  Run the vm in debugger mode\n");
+	printf("    --help      This screen\n");
+	printf("\n");
 }
 
