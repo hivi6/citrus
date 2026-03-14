@@ -332,3 +332,14 @@ r9 <- arg5
 
 Most of the calling convention are based on this [table](https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/#x86_64-64-bit)
 
+#### read syscall
+
+Read the content of a file descriptor to a buffer
+
+```
+r3 <- Return value (how much character read)
+r4 <- unsigned int fd
+r5 <- char *buf
+r6 <- size_t count
+```
+

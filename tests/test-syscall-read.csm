@@ -1,1 +1,65 @@
+# Read the content from stdin and print it
+main:
+	# Allocate space in stack for reading content from stdin
+	INST_PUSH       r2
+	INST_LOAD       r2 r1 8
+	INST_LOAD_CONST r3 1024  # Size of the buffer
+	INST_SUB        r1 r1 r3
+
+	# Make syscall to read content from stdin
+	INST_LOAD_CONST r4 0
+	INST_LOAD_CONST r5 1024
+	INST_SUB        r5 r2 r4
+	INST_LOAD_CONST r6 1024
+	INST_SYSCALL    0
+
+	INST_HLT
+
+# Print the string
+# arg0 = 8 bytes for length
+# arg1 = Length bytes for string that needs printing
+printStr:
+	# First store the rbp(r2) pointer
+	INST_PUSH r2
+	INST_LOAD r2 r1 8
+
+	# Get the content of stack (pointer)
+	INST_LOAD_CONST    r10 16     # Position for the length argument
+	INST_ADD           r10 r2 r10
+	INST_LOAD_INDIRECT r10 r10 8
+	INST_LOAD_CONST    r11 24     # Pointer to the string
+	INST_ADD           r11 r2 r10
+
+	# Loop for printing the string
+printStrStartLoop:
+	INST_JMP_FALSE r10 printStrEndLoop
+	INST_PUSH r10
+
+	# Allocate
+
+	INST_POP  r10
+printStrEndLoop:
+
+	INST_RET
+
+printChar:
+	# First store the rbp(r2) pointer 
+	INST_PUSH r2
+	INST_LOAD r2 r1 8
+
+	# Get the content of stack (pointer)
+	INST_LOAD_CONST    r10 16
+	INST_ADD           r10 r2 r10
+
+	# Make syscall to write
+	INST_LOAD_CONST      r4 0
+	INST_LOAD            r5 r10 8
+	INST_LOAD_CONST      r6 1
+	INST_SYSCALL         1
+
+	# Get the rbp before return
+	INST_POP  r2
+
+	INST_RET
+
 

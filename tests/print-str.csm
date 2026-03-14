@@ -1,0 +1,102 @@
+main:
+	# Store the base stack pointer
+	INST_LOAD       r2 r1 8
+	INST_LOAD_CONST r10 4
+	INST_SUB        r1 r1 r10
+
+	# Store the content
+	INST_LOAD_CONST     r10 10 # Newline
+	INST_LOAD_CONST     r11 1
+	INST_SUB            r11 r2 r11
+	INST_STORE_INDIRECT r11 r10 1
+
+	INST_LOAD_CONST     r10 67 # C
+	INST_LOAD_CONST     r11 2
+	INST_SUB            r11 r2 r11
+	INST_STORE_INDIRECT r11 r10 1
+
+	INST_LOAD_CONST     r10 66 # B
+	INST_LOAD_CONST     r11 3
+	INST_SUB            r11 r2 r11
+	INST_STORE_INDIRECT r11 r10 1
+
+	INST_LOAD_CONST     r10 65 # A
+	INST_LOAD_CONST     r11 4
+	INST_SUB            r11 r2 r11
+	INST_STORE_INDIRECT r11 r10 1
+
+	# Call printStr
+	INST_LOAD_CONST r10 4
+	INST_PUSH       r1
+	INST_PUSH       r10
+	INST_CALL       printStr
+
+	# Stop program
+	INST_HLT
+
+# Print a string
+# arg0 = 8 byte (the length of the string)
+# arg1 = 8 byte (pointer to the string)
+printStr:
+	# Push rbp(r2) to stack
+	INST_PUSH r2
+	INST_LOAD r2 r1 8
+
+	# Get the function arguments
+	INST_LOAD_CONST    r10 16      # arg0 (length of the string)
+	INST_ADD           r10 r2 r10
+	INST_LOAD_INDIRECT r10 r10 8
+	INST_LOAD_CONST    r11 24      # arg1 (pointer to the string)
+	INST_ADD           r11 r2 r11
+	INST_LOAD_INDIRECT r11 r11 8
+
+printStrStartLoop:
+	INST_JMP_FALSE r10 printStrEndLoop
+
+	# Save the important register to stack before function call
+	INST_PUSH r10
+	INST_PUSH r11
+
+	# Allocate memory for printChar function call
+	INST_LOAD_INDIRECT r10 r11 1
+	INST_PUSH          r10
+	INST_CALL          printChar
+	INST_POP           r10
+
+	INST_POP  r11
+	INST_POP  r10
+
+	INST_LOAD_CONST r12 1
+	INST_SUB        r10 r10 r12
+	INST_ADD        r11 r11 r12
+	
+	INST_JMP printStrStartLoop
+printStrEndLoop:
+
+	# Pop the rbp
+	INST_POP r2
+
+	INST_RET
+
+# Print a character
+# arg0 = 1 byte (that needs printing)
+printChar:
+	# Store the rbp
+	INST_PUSH r2
+	INST_LOAD r2 r1 8
+
+	# Get the pointer to the character that needs printing (r10)
+	INST_LOAD_CONST r10 16
+	INST_ADD        r10 r2 r10
+
+	# Make write syscall to print character
+	INST_LOAD_CONST r4 1
+	INST_LOAD       r5 r10 8
+	INST_LOAD_CONST r6 1
+	INST_SYSCALL    1
+
+	# Get back the rbp
+	INST_POP r2
+
+	# Return from the given function
+	INST_RET
