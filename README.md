@@ -337,6 +337,7 @@ Most of the calling convention are based on this [table](https://www.chromium.or
 Read the content of a file descriptor to a buffer
 
 ```
+SYSCALL_NUMBER <- 0
 r3 <- Return value (how much character read)
 r4 <- unsigned int fd
 r5 <- char *buf
@@ -345,4 +346,17 @@ r6 <- size_t count
 
 [Example](./tests/test-syscall-read.csm)
 
+#### write syscall
+
+Write the content of a string to a file descriptor
+
+```
+SYSCALL_NUMNER <- 1
+r3 <- Return value (how much character wrote)
+r4 <- unsigned int fd
+r5 <- const char *buf
+r6 <- size_t count
+```
+
+[Example](./tests/test-syscall-write.csm)
 
