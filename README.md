@@ -332,7 +332,7 @@ r9 <- arg5
 
 Most of the calling convention are based on this [table](https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/#x86_64-64-bit)
 
-#### read syscall
+#### `read` syscall
 
 Read the content of a file descriptor to a buffer
 
@@ -346,7 +346,7 @@ r6 <- size_t count
 
 [Example](./tests/test-syscall-read.csm)
 
-#### write syscall
+#### `write` syscall
 
 Write the content of a string to a file descriptor
 
@@ -359,4 +359,27 @@ r6 <- size_t count
 ```
 
 [Example](./tests/test-syscall-write.csm)
+
+#### `exit` syscall
+
+Exit a given process with the given exit code
+
+```
+SYSCALL_NUMBER <- 60
+r3 <- Return value (no idea)
+r4 <- int error_code
+```
+
+[Example](./tests/test-syscall-exit.csm)
+
+#### `clock_gettime` syscall
+
+Get the seconds and nanoseconds
+
+```
+SYSCALL_NUMBER <- 228
+r3 <- Return value (no idea)
+r4 <- clockid_t which_clock
+r5 <- struct __kernel_timespec *tp
+```
 

@@ -5,6 +5,7 @@
 #include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/syscall.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <time.h>
@@ -252,38 +253,10 @@ void vm_syscall(vm_t *vm, uint64_t number) {
 	case 1: // write
 		returnValue = write(arg0, (void *) arg1, arg2);
 		break;
-	case 2: // open
-		returnValue = open((void *) arg0, arg1, arg2);
-		break;
-	case 3: // close
-		returnValue = close(arg0);
-		break;
-	case 4: // stat
-		returnValue = stat((void *) arg0, (void *) arg1);
-		break;
-	case 5: // fstat
-		returnValue = fstat(arg0, (void *) arg1);
-		break;
-	case 6: // lstat
-		returnValue = lstat((void *) arg0, (void *) arg1);
-		break;
-	case 7: // poll
-		returnValue = poll((void *) arg0, arg1, arg2);
-		break;
-	case 8: // lseek
-		returnValue = lseek(arg0, arg1, arg2);
-		break;
-	case 9: // mmap
-		returnValue = (uint64_t) mmap((void *) arg0, arg1, arg2, arg3, 
-			arg4, arg5);
-		break;
-	case 10: // mprotect
-		returnValue = mprotect((void *) arg0, arg1, arg2);
-		break;
 	case 60: // exit
 		exit(arg0);
 		break;
-	case 263: // clock_gettime
+	case 228: // clock_gettime
 		returnValue = clock_gettime(arg0, (void *) arg1);
 		break;
 	default:
