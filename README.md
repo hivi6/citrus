@@ -343,3 +343,6 @@ r5 <- char *buf
 r6 <- size_t count
 ```
 
+[Example](./tests/test-syscall-read.csm)
+
+

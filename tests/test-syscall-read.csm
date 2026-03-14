@@ -1,65 +1,91 @@
-# Read the content from stdin and print it
+# Read the content from stdin and print that
 main:
-	# Allocate space in stack for reading content from stdin
-	INST_PUSH       r2
+	# Allocate space for reading
 	INST_LOAD       r2 r1 8
-	INST_LOAD_CONST r3 1024  # Size of the buffer
-	INST_SUB        r1 r1 r3
+	INST_LOAD_CONST r10 255
+	INST_SUB        r1 r1 r10
 
-	# Make syscall to read content from stdin
+	# Make syscall to read content
 	INST_LOAD_CONST r4 0
-	INST_LOAD_CONST r5 1024
-	INST_SUB        r5 r2 r4
-	INST_LOAD_CONST r6 1024
+	INST_LOAD       r5 r1 8
+	INST_LOAD_CONST r6 255
 	INST_SYSCALL    0
+
+	# Make function call to printStr
+	INST_PUSH r1
+	INST_PUSH r3
+
+	INST_CALL printStr
+
+	INST_POP  r3
+	INST_POP  r1
 
 	INST_HLT
 
-# Print the string
-# arg0 = 8 bytes for length
-# arg1 = Length bytes for string that needs printing
+# Print a string
+# arg0 = 8 byte (the length of the string)
+# arg1 = 8 byte (pointer to the string)
 printStr:
-	# First store the rbp(r2) pointer
+	# Push rbp(r2) to stack
 	INST_PUSH r2
 	INST_LOAD r2 r1 8
 
-	# Get the content of stack (pointer)
-	INST_LOAD_CONST    r10 16     # Position for the length argument
+	# Get the function arguments
+	INST_LOAD_CONST    r10 16      # arg0 (length of the string)
 	INST_ADD           r10 r2 r10
 	INST_LOAD_INDIRECT r10 r10 8
-	INST_LOAD_CONST    r11 24     # Pointer to the string
-	INST_ADD           r11 r2 r10
+	INST_LOAD_CONST    r11 24      # arg1 (pointer to the string)
+	INST_ADD           r11 r2 r11
+	INST_LOAD_INDIRECT r11 r11 8
 
-	# Loop for printing the string
 printStrStartLoop:
 	INST_JMP_FALSE r10 printStrEndLoop
+
+	# Save the important register to stack before function call
 	INST_PUSH r10
+	INST_PUSH r11
 
-	# Allocate
+	# Allocate memory for printChar function call
+	INST_LOAD_INDIRECT r10 r11 1
+	INST_PUSH          r10
+	INST_CALL          printChar
+	INST_POP           r10
 
+	INST_POP  r11
 	INST_POP  r10
+
+	INST_LOAD_CONST r12 1
+	INST_SUB        r10 r10 r12
+	INST_ADD        r11 r11 r12
+	
+	INST_JMP printStrStartLoop
 printStrEndLoop:
+
+	# Pop the rbp
+	INST_POP r2
 
 	INST_RET
 
+# Print a character
+# arg0 = 1 byte (that needs printing)
 printChar:
-	# First store the rbp(r2) pointer 
+	# Store the rbp
 	INST_PUSH r2
 	INST_LOAD r2 r1 8
 
-	# Get the content of stack (pointer)
-	INST_LOAD_CONST    r10 16
-	INST_ADD           r10 r2 r10
+	# Get the pointer to the character that needs printing (r10)
+	INST_LOAD_CONST r10 16
+	INST_ADD        r10 r2 r10
 
-	# Make syscall to write
-	INST_LOAD_CONST      r4 0
-	INST_LOAD            r5 r10 8
-	INST_LOAD_CONST      r6 1
-	INST_SYSCALL         1
+	# Make write syscall to print character
+	INST_LOAD_CONST r4 1
+	INST_LOAD       r5 r10 8
+	INST_LOAD_CONST r6 1
+	INST_SYSCALL    1
 
-	# Get the rbp before return
-	INST_POP  r2
+	# Get back the rbp
+	INST_POP r2
 
+	# Return from the given function
 	INST_RET
-
 
