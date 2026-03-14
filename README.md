@@ -424,3 +424,5 @@ r4 <- clockid_t which_clock
 r5 <- struct __kernel_timespec *tp
 ```
 
+[Example](./tests/test-syscall-clock_gettime.csm)
+
