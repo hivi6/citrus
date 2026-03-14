@@ -5,6 +5,7 @@ main:
 	INST_LOAD_CONST r10 255
 	INST_SUB        r1 r1 r10
 
+START:
 	# Make syscall to read content
 	INST_LOAD_CONST r4 0
 	INST_LOAD       r5 r1 8
@@ -12,6 +13,8 @@ main:
 	INST_SYSCALL    0
 
 	# Make function call to printStr
+	INST_JMP_FALSE r3 END
+
 	INST_PUSH r1
 	INST_PUSH r3
 
@@ -19,6 +22,8 @@ main:
 
 	INST_POP  r3
 	INST_POP  r1
+	INST_JMP  START
+END:
 
 	INST_HLT
 
