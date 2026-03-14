@@ -140,6 +140,13 @@ void debugger(vm_t *vm) {
 		else if (strcmp(cmd, "run") == 0) {
 			while (!vm_next(vm));
 		}
+		else if (strcmp(cmd, "reset") == 0) {
+			inst_t *inst = vm->inst;
+			uint64_t inst_size = vm->inst_size;
+			vm_free(vm);
+			vm_init(vm, 1024 * 1024);
+			vm_load(vm, inst, inst_size);
+		}
 		else {
 			printf("Unknown command\n");
 			continue;
@@ -158,6 +165,7 @@ void debugger_usage() {
 	printf("    exit    Exist debugger mode\n");
 	printf("    help    This screen\n");
 	printf("    run     Complete run the vm until halt instruction\n");
+	printf("    reset   Reset the vm and load the instruction again\n");
 	printf("\n");
 
 }
