@@ -2,6 +2,47 @@
 
 A (infinite) register based VM.
 
+## Build instruction
+
+To build the project use the following command:
+
+```bash
+make
+```
+
+This should build the `citrus` binary in the `build` folder.
+
+## Running a program
+
+You can run the program as follows:
+
+```bash
+./build/citrus tests/print-char.csm
+```
+
+To enter debug mode run the following:
+
+```bash
+./build/citrus --debugger tests/print-char.csm
+```
+
+To check usage run the following:
+
+```bash
+./build/cirtus --help
+```
+
+Usage output:
+
+```bash
+Usage: citrus [OPTIONS] <filepath>
+
+OPTIONS:
+    --debugger  Run the vm in debugger mode
+    --help      This screen
+
+```
+
 ## Registers
 
 The VM has infinitly many registers, but by default there are 16 registers.
