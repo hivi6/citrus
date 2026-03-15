@@ -304,7 +304,7 @@ INST_DIV r4 r2 r3
 
 Here r4 = r2 / r3
 
-### Divide instruction
+### Modulus instruction
 
 Arguments:
 - 1st argument: Destination Register identifier
