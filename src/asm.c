@@ -106,8 +106,7 @@ void init(const char *filepath) {
 
 void load_file() {
 	FILE *fd = stdin;
-	int isFile = (strcmp(g_filepath, "-") != 0);
-	if (isFile) fd = fopen(g_filepath, "r");
+	fd = fopen(g_filepath, "r");
 	if (fd == NULL) {
 		char buffer[1024];
 		snprintf(buffer, 1024, "Error opening '%s'", g_filepath);
@@ -127,7 +126,7 @@ void load_file() {
 	fread(buffer, 1, len, fd);
 	buffer[len] = 0;
 
-	if (isFile) fclose(fd);
+	fclose(fd);
 
 	g_source = buffer;
 	g_source_len = len;
